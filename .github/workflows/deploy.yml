@@ -5,6 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Salve o appId gerado no primeiro deploy como a variável de repositório
+# GODEPLOY_APP_ID (Settings > Secrets and variables > Actions > Variables).
+# Com ela definida, os próximos pushes ATUALIZAM o mesmo app em vez de criar um novo.
+env:
+  API_BASE: https://admin.devgogroup.com/api/deploy/v1
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -13,9 +19,53 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy to GoDeploy
-        uses: goca-se/godeploy/action@v1
-        with:
-          api-key: ${{ secrets.GODEPLOY_DEPLOY_KEY }}
-          description: "Deploy painel-eficiencia via GitHub Actions"
-          assets: index.html
-          name: painel-eficiencia
+        env:
+          API_KEY: ${{ secrets.GODEPLOY_DEPLOY_KEY }}
+          APP_ID: ${{ vars.GODEPLOY_APP_ID }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::1. Obtendo upload token"
+          TOKEN_RESP=$(curl -sS -X POST "$API_BASE/upload-token" \
+            -H "Authorization: Bearer $API_KEY")
+          echo "$TOKEN_RESP" | jq -e . > /dev/null || { echo "Resposta inválida: $TOKEN_RESP"; exit 1; }
+          UPLOAD_TOKEN=$(echo "$TOKEN_RESP" | jq -r '.uploadToken')
+          UPLOAD_URL=$(echo "$TOKEN_RESP" | jq -r '.uploadUrl')
+          echo "Upload URL obtido."
+          echo "::endgroup::"
+
+          echo "::group::2. Enviando arquivos"
+          UPLOAD_RESP=$(curl -sS -X POST "$UPLOAD_URL" \
+            -H "Authorization: Bearer $UPLOAD_TOKEN" \
+            -F "index.html=@./index.html")
+          echo "$UPLOAD_RESP" | jq -e . > /dev/null || { echo "Resposta inválida: $UPLOAD_RESP"; exit 1; }
+          UPLOAD_ID=$(echo "$UPLOAD_RESP" | jq -r '.uploadId')
+          echo "uploadId: $UPLOAD_ID"
+          echo "::endgroup::"
+
+          echo "::group::3. Criando/atualizando app"
+          if [ -n "${APP_ID:-}" ]; then
+            echo "Atualizando app existente: $APP_ID"
+            RESP=$(curl -sS -X PATCH "$API_BASE/apps/$APP_ID" \
+              -H "Authorization: Bearer $API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "$(jq -nc --arg u "$UPLOAD_ID" '{uploadId:$u, assets:["index.html"]}')")
+          else
+            echo "Criando app novo"
+            RESP=$(curl -sS -X POST "$API_BASE/apps" \
+              -H "Authorization: Bearer $API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "$(jq -nc --arg u "$UPLOAD_ID" '{uploadId:$u, assets:["index.html"], name:"painel-eficiencia"}')")
+          fi
+          echo "$RESP" | jq -e . > /dev/null || { echo "Resposta inválida: $RESP"; exit 1; }
+          echo "$RESP" | jq .
+          echo "::endgroup::"
+
+          APP_ID_OUT=$(echo "$RESP" | jq -r '.appId // .id // empty')
+          URL_OUT=$(echo "$RESP" | jq -r '.url // empty')
+          echo "### 🚀 Deploy concluído" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **appId:** \`$APP_ID_OUT\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **URL:** $URL_OUT" >> "$GITHUB_STEP_SUMMARY"
+          if [ -z "${APP_ID:-}" ]; then
+            echo "- ⚠️ Salve \`$APP_ID_OUT\` na variável de repositório **GODEPLOY_APP_ID** para os próximos deploys atualizarem este mesmo app." >> "$GITHUB_STEP_SUMMARY"
+          fi
