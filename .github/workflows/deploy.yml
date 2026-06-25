@@ -1,0 +1,21 @@
+name: Deploy to GoDeploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to GoDeploy
+        uses: goca-se/godeploy/action@v1
+        with:
+          api-key: ${{ secrets.GODEPLOY_DEPLOY_KEY }}
+          description: "Deploy painel-eficiencia via GitHub Actions"
+          assets: index.html
+          name: painel-eficiencia

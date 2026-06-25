@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gogroup · Eficiência CX Gobeaute — comparativo 4 semanas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" />
+<style>
+  :root{
+    --gg-azul:#2659a5; --gg-azul-esc:#1c4480; --gg-lima:#d7d900; --gg-amarelo:#f8ae13;
+    --gg-rosa:#e61782; --gg-vermelho:#e5273c; --gg-ceu:#3dbfef; --gg-branco:#ffffff; --gg-preto:#1a1a1a;
+    --gg-font:'Poppins',Arial,Helvetica,sans-serif;
+    --gg-radius-sm:8px; --gg-radius-md:16px; --gg-radius-lg:28px; --gg-radius-pill:999px;
+    --color-text-primary:#1a1a1a; --color-text-secondary:#5b6b85; --color-text-tertiary:#9aa5b5;
+    --color-border-tertiary:rgba(38,89,165,0.12); --color-border-secondary:rgba(38,89,165,0.28);
+    --color-background-primary:#ffffff; --color-background-secondary:#eef2f9; --border-radius-md:8px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#f4f6fb;color:var(--color-text-primary);font-family:var(--gg-font);line-height:1.5;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem 3rem;}
+  .hero{position:relative;background:var(--gg-azul);color:var(--gg-branco);border-radius:0 0 var(--gg-radius-lg) var(--gg-radius-lg);padding:2.75rem 2.25rem 2.5rem;margin-bottom:1.75rem;overflow:hidden;}
+  .hero .logo{position:absolute;top:24px;right:28px;height:30px;}
+  .hero-sub{font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gg-lima);margin:0 0 8px;}
+  .hero h1{font-weight:700;font-size:40px;line-height:1.05;letter-spacing:-1px;margin:0 0 10px;}
+  .hero p{font-weight:400;font-size:15px;color:#dbe6f7;margin:0;max-width:640px;}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:1.75rem;}
+  .kpi{background:var(--gg-branco);border-radius:var(--gg-radius-md);padding:18px 20px;border:3px solid var(--gg-azul);}
+  .kpi .lbl{font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-secondary);margin:0 0 6px;}
+  .kpi .val{font-weight:700;font-size:30px;color:var(--gg-azul);line-height:1;}
+  .controls{display:flex;align-items:center;gap:18px;margin-bottom:1rem;flex-wrap:wrap;}
+  .controls label{font-size:13px;color:var(--color-text-secondary);font-weight:500;}
+  select{font-family:inherit;font-size:13px;font-weight:500;padding:7px 12px;border:2px solid var(--gg-azul);border-radius:var(--gg-radius-pill);background:#fff;color:var(--gg-azul);cursor:pointer;}
+  input[type=checkbox]{accent-color:var(--gg-azul);width:15px;height:15px;}
+  .tablebox{overflow-x:auto;border-radius:var(--gg-radius-md);border:2px solid var(--gg-azul);}
+  table{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%;white-space:nowrap;font-family:var(--gg-font);}
+  .note{font-size:12px;color:var(--color-text-tertiary);margin:0.85rem 0 0;line-height:1.6;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr);}.hero h1{font-size:30px;}}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Comparativo das últimas quatro semanas (W21 a W24) por agente de CX Gobeaute.</h2>
+
+<header class="hero">
+  <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" preserveAspectRatio="xMidYMid meet" aria-label="Gogroup"><text x="0" y="125" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="140" fill="#ffffff" letter-spacing="-2">Gogroup</text></svg>
+  <p class="hero-sub">Operações · CX Gobeaute</p>
+  <h1>Eficiência por agente — comparativo de 4 semanas</h1>
+  <p>Atendimentos/dia, CSAT e TMO de cada semana (W21→W24) e a tendência geral. Período: 22/05 a 18/06.</p>
+</header>
+
+<div class="wrap">
+  <section class="kpis" id="kpis"></section>
+
+  <div class="controls">
+    <div style="display:flex;align-items:center;gap:8px;"><label>Marca</label><select id="brand"></select></div>
+    <label style="display:flex;align-items:center;gap:7px;cursor:pointer;"><input type="checkbox" id="hideLow" checked /> ocultar baixo volume</label>
+    <span style="font-size:12px;color:var(--color-text-tertiary);font-weight:500;" id="count"></span>
+  </div>
+
+  <div class="tablebox">
+    <table id="tbl"><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+  </div>
+  <p class="note">ATEND = atendimentos/dia · CSAT = % satisfação · TMO = tempo médio de operação (min). Tendência = média das 4 semanas; a seta compara W24 com W21. Escala de cor: vermelho (pior) → amarelo → verde (melhor); rosa indica TMO muito alto. Clique nos cabeçalhos para ordenar. A marca exibida é a de maior atuação de cada agente no período. Fonte: Metabase — card 19175.</p>
+</div>
+
+<script>
+const BR={"Alessandra Marques":"Rituária","Aline Almeida":"Apice","Ana Karoline":"Apice","Antonia Graziela":"Barbour's","Cláudia Souza":"Kokeshi","Cristiane Cardoso":"Rituária","Daiane Prates":"Rituária","Drielly Cristine":"Rituária","Edith Garcia":"Apice","Elaine":"Rituária","Ellen Marques":"Barbour's","Ellen Roberta":"Rituária","Gabriela Meira":"Rituária","Gabrielly Lessa":"Barbour's","Gabriely Pedro":"Barbour's","Georgia Silva":"Apice","Giovanna Bonine":"Kokeshi","Hadlla Nascimento":"Barbour's","Isabelle Silva":"Barbour's","Jaqueline Bonizioli":"Barbour's","Jaqueline Silva":"Lescent","Jessyca Cantino":"Apice","Julia Brito":"Kokeshi","Juliana Rodrigues":"Rituária","Juliana Siqueira":"Apice","Jussara Rosa":"Kokeshi","Karina Oliveira":"Barbour's","Karini Martins":"Barbour's","Kéren Souza":"Rituária","Lenilza Rodrigues":"Apice","Liane Patrícia":"Barbour's","Lorena Mendes":"Apice","Lúbia Maia":"Rituária","Luciane Assis":"Rituária","Mariana Santiago":"Barbour's","Mirela Vitoria":"Rituária","Monique Duarte":"Barbour's","Naomi Dias":"Barbour's","Nayane":"Rituária","Priscila Ferreira":"Rituária","Priscila Sousa":"Kokeshi","Rafaela Lima":"Kokeshi","Rafaela Lizar":"Lescent","Rafaela Menezes":"Apice","Rafaele Carvalho":"Apice","Suellen Silva":"Kokeshi","Tábala Freitas":"Rituária","Tais Jesus":"Kokeshi","Vanessa Cardoso":"Lescent","Victoria Holanda":"Kokeshi","Virginia Bahia":"Barbour's"};
+
+const D=[
+["Alessandra Marques",24,19.6,0.96875,41.1],["Antonia Graziela",24,36.0,0.963415,12.86],["Cristiane Cardoso",24,18.0,0.9,31.77],["Drielly Cristine",24,17.4,1.0,40.42],["Edith Garcia",24,25.8,0.880952,16.36],["Elaine",24,20.0,0.974359,36.41],["Ellen Marques",24,5.5,1.0,106.43],["Ellen Roberta",24,1.0,1.0,11.46],["Gabriela Meira",24,14.5,0.894737,52.67],["Gabriely Pedro",24,25.4,0.957447,27.36],["Georgia Silva",24,45.2,0.961538,41.33],["Giovanna Bonine",24,26.4,1.0,56.31],["Hadlla Nascimento",24,19.8,0.96,42.31],["Isabelle Silva",24,36.4,0.952381,21.63],["Jaqueline Silva",24,16.0,0.962963,43.74],["Jessyca Cantino",24,2.0,null,49.56],["Julia Brito",24,29.4,0.979592,41.55],["Juliana Rodrigues",24,22.6,0.97619,33.82],["Juliana Siqueira",24,1.0,1.0,42.02],["Jussara Rosa",24,1.0,null,58.05],["Karina Oliveira",24,30.0,0.963636,53.72],["Karini Martins",24,2.667,1.0,51.21],["Kéren Souza",24,19.0,0.967742,36.5],["Lenilza Rodrigues",24,37.4,0.946429,48.86],["Liane Patrícia",24,22.6,0.95,31.25],["Lorena Mendes",24,29.4,0.981818,35.27],["Lúbia Maia",24,17.2,0.969697,32.47],["Luciane Assis",24,20.6,0.976744,40.45],["Mariana Santiago",24,21.2,0.904762,29.74],["Mirela Vitoria",24,22.2,0.969697,38.73],["Monique Duarte",24,31.2,0.981818,32.46],["Naomi Dias",24,32.25,0.939394,58.33],["Priscila Ferreira",24,17.8,0.972973,42.54],["Priscila Sousa",24,13.0,0.941176,40.24],["Rafaela Lima",24,24.8,0.942857,35.65],["Rafaela Lizar",24,25.4,0.96,43.28],["Rafaela Menezes",24,41.6,0.970149,27.67],["Rafaele Carvalho",24,2.5,1.0,98.65],["Suellen Silva",24,30.2,1.0,47.31],["Tábala Freitas",24,23.2,0.862069,53.67],["Virginia Bahia",24,22.2,0.93617,37.43],
+["Alessandra Marques",23,15.2,1.0,26.85],["Ana Karoline",23,1.0,null,1.57],["Antonia Graziela",23,40.8,0.980952,12.44],["Cristiane Cardoso",23,17.4,0.923077,28.63],["Daiane Prates",23,1.0,null,0.23],["Drielly Cristine",23,13.2,0.966667,49.32],["Edith Garcia",23,27.8,0.895833,16.73],["Elaine",23,19.0,0.9375,32.36],["Ellen Marques",23,1.0,null,212.3],["Ellen Roberta",23,1.2,0.5,37.07],["Gabriela Meira",23,13.6,0.956522,29.13],["Gabriely Pedro",23,34.8,0.983607,28.61],["Georgia Silva",23,45.8,0.973684,40.59],["Giovanna Bonine",23,19.25,1.0,56.14],["Hadlla Nascimento",23,23.8,0.962963,40.03],["Isabelle Silva",23,37.0,0.962264,20.26],["Jaqueline Silva",23,24.8,1.0,43.97],["Julia Brito",23,31.0,0.948276,40.88],["Juliana Rodrigues",23,20.0,1.0,36.05],["Juliana Siqueira",23,2.0,null,109.59],["Karina Oliveira",23,31.2,0.984375,41.07],["Karini Martins",23,3.5,1.0,69.37],["Kéren Souza",23,17.8,1.0,36.96],["Lenilza Rodrigues",23,45.4,0.898551,49.75],["Liane Patrícia",23,28.4,0.967742,33.65],["Lorena Mendes",23,40.8,0.947368,34.48],["Lúbia Maia",23,14.2,0.96,35.89],["Luciane Assis",23,17.6,0.972222,39.41],["Mariana Santiago",23,27.6,0.955556,24.37],["Mirela Vitoria",23,18.2,0.95122,33.58],["Monique Duarte",23,39.6,0.971014,61.57],["Naomi Dias",23,39.5,0.894737,45.39],["Priscila Ferreira",23,15.8,1.0,36.82],["Priscila Sousa",23,11.667,0.933333,48.21],["Rafaela Lima",23,25.0,0.945946,38.27],["Rafaela Lizar",23,28.0,0.951613,30.04],["Rafaela Menezes",23,51.2,0.97,24.27],["Suellen Silva",23,32.4,0.979167,45.77],["Tábala Freitas",23,21.0,0.875,50.99],["Victoria Holanda",23,1.0,null,1.95],["Virginia Bahia",23,27.4,0.886364,56.56],
+["Alessandra Marques",22,12.0,1.0,29.31],["Antonia Graziela",22,38.5,0.955882,15.3],["Cláudia Souza",22,2.0,null,18.3],["Cristiane Cardoso",22,14.75,0.952381,27.04],["Drielly Cristine",22,13.0,0.956522,41.71],["Edith Garcia",22,26.0,0.958333,15.8],["Elaine",22,15.5,1.0,27.15],["Ellen Marques",22,2.0,null,75.41],["Ellen Roberta",22,1.667,null,80.8],["Gabriela Meira",22,10.667,0.928571,24.44],["Gabrielly Lessa",22,1.0,null,20.43],["Gabriely Pedro",22,30.0,0.931818,32.49],["Georgia Silva",22,39.0,0.981818,34.24],["Giovanna Bonine",22,24.5,0.971429,68.66],["Hadlla Nascimento",22,18.75,0.894737,36.63],["Isabelle Silva",22,27.5,0.895833,20.55],["Jaqueline Silva",22,30.75,0.926829,44.85],["Jessyca Cantino",22,3.0,0.0,60.93],["Julia Brito",22,27.25,0.948718,43.03],["Juliana Rodrigues",22,17.0,0.928571,35.35],["Jussara Rosa",22,2.0,1.0,40.5],["Karina Oliveira",22,24.5,1.0,33.74],["Karini Martins",22,2.0,null,67.59],["Kéren Souza",22,15.5,0.964286,30.51],["Lenilza Rodrigues",22,34.0,0.883721,41.47],["Liane Patrícia",22,19.0,1.0,26.88],["Lorena Mendes",22,34.0,0.982143,30.7],["Lúbia Maia",22,12.25,0.944444,28.22],["Luciane Assis",22,17.5,0.925926,35.69],["Mariana Santiago",22,20.25,0.925926,21.23],["Mirela Vitoria",22,15.0,0.952381,38.14],["Monique Duarte",22,33.0,0.957447,28.08],["Naomi Dias",22,34.25,1.0,37.48],["Priscila Ferreira",22,12.5,0.833333,33.62],["Priscila Sousa",22,8.5,0.9375,51.37],["Rafaela Lima",22,26.5,0.96875,31.72],["Rafaela Lizar",22,36.25,0.931818,27.38],["Rafaela Menezes",22,37.5,0.984127,25.02],["Suellen Silva",22,30.25,0.942857,53.71],["Tábala Freitas",22,19.25,0.909091,47.49],["Virginia Bahia",22,20.5,0.916667,52.91],
+["Alessandra Marques",21,16.0,0.967742,29.93],["Aline Almeida",21,23.333,0.9,49.19],["Ana Karoline",21,1.0,null,30.47],["Antonia Graziela",21,39.4,0.97,12.63],["Cláudia Souza",21,5.0,null,83.74],["Cristiane Cardoso",21,17.6,1.0,31.12],["Daiane Prates",21,17.8,0.888889,28.41],["Drielly Cristine",21,14.4,0.961538,44.34],["Edith Garcia",21,25.2,0.968254,15.18],["Elaine",21,21.4,1.0,30.5],["Ellen Marques",21,3.0,1.0,74.69],["Ellen Roberta",21,1.0,1.0,213.93],["Gabriely Pedro",21,23.6,0.952381,31.63],["Georgia Silva",21,40.2,0.970149,38.39],["Giovanna Bonine",21,36.2,0.938462,71.63],["Hadlla Nascimento",21,15.0,0.857143,44.47],["Isabelle Silva",21,30.0,1.0,18.27],["Jaqueline Bonizioli",21,1.0,null,32.42],["Jaqueline Silva",21,22.4,1.0,47.05],["Jessyca Cantino",21,1.0,null,22.68],["Julia Brito",21,40.2,0.983333,47.14],["Juliana Rodrigues",21,21.6,0.9375,33.56],["Juliana Siqueira",21,2.5,null,326.77],["Karina Oliveira",21,26.0,1.0,30.26],["Karini Martins",21,1.0,null,55.61],["Kéren Souza",21,19.2,1.0,30.96],["Lenilza Rodrigues",21,35.8,1.0,39.27],["Liane Patrícia",21,21.2,0.948718,24.84],["Lorena Mendes",21,34.4,0.971014,19.9],["Lúbia Maia",21,17.6,1.0,28.53],["Luciane Assis",21,18.0,0.970588,39.37],["Mariana Santiago",21,18.2,0.952381,24.83],["Mirela Vitoria",21,20.2,0.972973,35.53],["Monique Duarte",21,29.2,0.947368,31.56],["Naomi Dias",21,16.4,0.931034,43.91],["Nayane",21,1.0,null,25.02],["Priscila Ferreira",21,16.4,0.952381,39.36],["Priscila Sousa",21,11.2,0.923077,75.27],["Rafaela Lima",21,39.8,0.944444,42.8],["Rafaela Lizar",21,42.8,0.924051,29.53],["Rafaela Menezes",21,36.4,1.0,21.71],["Suellen Silva",21,43.8,1.0,53.68],["Tábala Freitas",21,22.8,0.9375,51.57],["Tais Jesus",21,1.5,null,162.39],["Vanessa Cardoso",21,35.333,0.864865,31.32],["Virginia Bahia",21,18.8,1.0,110.52]
+];
+
+const WK=[21,22,23,24];
+const A={};
+for(const [n,w,at,cs,tm] of D){ if(!A[n]) A[n]={n,m:BR[n]||'—',w:{}}; A[n].w[w]={at,cs,tm}; }
+const AG=Object.values(A).map(g=>{
+  const wk=WK.map(w=>g.w[w]).filter(Boolean);
+  const cs=wk.map(x=>x.cs).filter(v=>v!==null&&v!==undefined);
+  const avgCs=cs.length?cs.reduce((a,b)=>a+b,0)/cs.length:null;
+  const avgTm=wk.reduce((a,b)=>a+b.tm,0)/wk.length;
+  const avgAt=wk.reduce((a,b)=>a+b.at,0)/wk.length;
+  const pres=WK.filter(w=>g.w[w]);
+  const first=g.w[pres[0]], last=g.w[pres[pres.length-1]];
+  let dCs=null; if(first.cs!==null&&last.cs!==null) dCs=last.cs-first.cs;
+  const dTm=last.tm-first.tm;
+  return {...g,avgCs,avgTm,avgAt,dCs,dTm};
+});
+
+const verde=[46,158,77], amarelo=[248,174,19], vermelho=[229,39,60], rosa=[230,23,130];
+const lerp=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+const scale=t=>{t=Math.max(0,Math.min(1,t)); return t<0.5?lerp(vermelho,amarelo,t*2):lerp(amarelo,verde,(t-0.5)*2);};
+const pastel=c=>`rgb(${lerp(c,[255,255,255],0.72).join(',')})`;
+const dark=c=>`rgb(${lerp(c,[26,26,26],0.45).join(',')})`;
+function csatCell(c){ if(c===null||c===undefined) return null; const col=scale((c-0.84)/0.16); return {bg:pastel(col),tx:dark(col),v:Math.round(c*100)+'%'}; }
+function tmoCell(t){ if(t===undefined) return null; let col; if(t>70) col=rosa; else col=scale(1-(t-13)/(57-13)); return {bg:pastel(col),tx:dark(col),v:Math.round(t)}; }
+const fmtAt=v=>v===undefined?'':(Math.round(v*10)%10===0?String(Math.round(v)):v.toFixed(1).replace('.',','));
+
+const core=AG.filter(g=>g.avgAt>=4);
+const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
+document.getElementById('kpis').innerHTML=[
+  ['Agentes (núcleo)',core.length],
+  ['CSAT médio',(mean(core.filter(g=>g.avgCs!==null).map(g=>g.avgCs))*100).toFixed(1)+'%'],
+  ['TMO médio',Math.round(mean(core.map(g=>g.avgTm)))+' min'],
+  ['Atend./dia médio',mean(core.map(g=>g.avgAt)).toFixed(1).replace('.',',')]
+].map(([l,v])=>`<div class="kpi"><div class="lbl">${l}</div><div class="val">${v}</div></div>`).join('');
+
+let sortKey='avgCs', sortDir=-1;
+const brandSel=document.getElementById('brand');
+const brands=['Todas',...Array.from(new Set(AG.map(g=>g.m))).sort()];
+brandSel.innerHTML=brands.map(b=>`<option>${b}</option>`).join('');
+
+const HEAD='background:var(--gg-azul);color:#fff;', SUB='background:var(--gg-azul-esc);color:#cfe0f5;';
+function buildHead(){
+  const wkCols=WK.map(w=>`<th colspan="3" style="text-align:center;padding:9px 8px;${HEAD}font-weight:700;border-left:1px solid rgba(255,255,255,0.25);">W${w}</th>`).join('');
+  document.getElementById('thead').innerHTML=
+    `<tr><th rowspan="2" data-k="m" style="text-align:left;padding:9px 10px;${HEAD}cursor:pointer;font-weight:700;position:sticky;left:0;">Marca${sortKey==='m'?(sortDir<0?' ↓':' ↑'):''}</th>
+      <th rowspan="2" data-k="n" style="text-align:left;padding:9px 10px;${HEAD}cursor:pointer;font-weight:700;border-left:1px solid rgba(255,255,255,0.25);">Agente${sortKey==='n'?(sortDir<0?' ↓':' ↑'):''}</th>
+      ${wkCols}
+      <th colspan="2" style="text-align:center;padding:9px 8px;${HEAD}font-weight:700;border-left:1px solid rgba(255,255,255,0.25);">Tendência</th></tr>
+    <tr>
+      ${WK.map(()=>`<th style="text-align:center;padding:5px 6px;${SUB}font-weight:600;border-left:1px solid rgba(255,255,255,0.18);">ATEND</th><th style="text-align:center;padding:5px 6px;${SUB}font-weight:600;">CSAT</th><th style="text-align:center;padding:5px 6px;${SUB}font-weight:600;">TMO</th>`).join('')}
+      <th data-k="avgCs" style="text-align:center;padding:5px 6px;${SUB}cursor:pointer;font-weight:600;border-left:1px solid rgba(255,255,255,0.18);">CSAT${sortKey==='avgCs'?(sortDir<0?' ↓':' ↑'):''}</th>
+      <th data-k="avgTm" style="text-align:center;padding:5px 6px;${SUB}cursor:pointer;font-weight:600;">TMO${sortKey==='avgTm'?(sortDir<0?' ↓':' ↑'):''}</th>
+    </tr>`;
+  document.querySelectorAll('#thead th[data-k]').forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k; if(sortKey===k) sortDir*=-1; else {sortKey=k;sortDir=(k==='n'||k==='m')?1:-1;} render();
+  });
+}
+
+function render(){
+  buildHead();
+  const bf=brandSel.value, hide=document.getElementById('hideLow').checked;
+  let rows=AG.filter(g=>(bf==='Todas'||g.m===bf)&&(!hide||g.avgAt>=4));
+  rows.sort((a,b)=>{
+    let va=a[sortKey],vb=b[sortKey];
+    if(sortKey==='n'||sortKey==='m'){return sortDir*String(va).localeCompare(String(vb));}
+    va=va??-1;vb=vb??-1;return sortDir*(va-vb);
+  });
+  const bd='border-bottom:1px solid var(--color-border-tertiary);';
+  const cell=(o,bold)=>o?`<td style="text-align:center;padding:6px 6px;background:${o.bg};color:${o.tx};${bold?'font-weight:600;':''}${bd}">${o.v}</td>`:`<td style="text-align:center;padding:6px 6px;color:var(--color-text-tertiary);${bd}">–</td>`;
+  const at=v=>`<td style="text-align:center;padding:6px 6px;border-left:1px solid var(--color-border-secondary);${bd}">${fmtAt(v)||'<span style=\"color:var(--color-text-tertiary)\">–</span>'}</td>`;
+  document.getElementById('tbody').innerHTML=rows.map((g,i)=>{
+    const zebra=i%2?'background:#f5f7fb;':'background:#fff;';
+    let tds='';
+    WK.forEach(w=>{ const x=g.w[w]; tds+=at(x?x.at:undefined)+cell(x?csatCell(x.cs):null)+cell(x?tmoCell(x.tm):null); });
+    const arr=(d,good)=> d===null?'':` <span style="font-size:10px;color:${(good?d>0:d<0)?'#3b7d22':((good?d<0:d>0)?'#e5273c':'var(--color-text-tertiary)')}">${Math.abs(d)<(good?0.005:1.5)?'▬':(d>0?'▲':'▼')}</span>`;
+    const tcs=g.avgCs===null?`<td style="border-left:1px solid var(--color-border-secondary);${bd}text-align:center;color:var(--color-text-tertiary)">–</td>`:(()=>{const c=csatCell(g.avgCs);return `<td style="text-align:center;padding:6px 6px;background:${c.bg};color:${c.tx};font-weight:700;border-left:1px solid var(--color-border-secondary);${bd}">${c.v}${arr(g.dCs,true)}</td>`;})();
+    const tm=tmoCell(g.avgTm);
+    const ttm=`<td style="text-align:center;padding:6px 6px;background:${tm.bg};color:${tm.tx};font-weight:700;${bd}">${tm.v}${arr(g.dTm,false)}</td>`;
+    return `<tr style="${zebra}"><td style="text-align:left;padding:6px 10px;${bd}color:var(--gg-azul);font-weight:600;position:sticky;left:0;${zebra}">${g.m}</td>
+      <td style="text-align:left;padding:6px 10px;${bd}font-weight:500;">${g.n}${g.avgAt<4?' <span style=\"font-size:10px;color:var(--color-text-tertiary)\">(baixo vol.)</span>':''}</td>
+      ${tds}${tcs}${ttm}</tr>`;
+  }).join('');
+  document.getElementById('count').textContent=`${rows.length} agentes`;
+}
+brandSel.onchange=render;
+document.getElementById('hideLow').onchange=render;
+render();
+</script>
+</body>
+</html>
