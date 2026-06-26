@@ -1,0 +1,37 @@
+name: Deploy CX Gobeaute (GoDeploy)
+
+# Sobe o app sempre que index.html mudar na branch main.
+# A deploy key fica em GitHub Secrets (Settings -> Secrets and variables -> Actions),
+# nunca no código. Nome esperado do secret: GODEPLOY_DEPLOY_KEY.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - ".github/workflows/godeploy.yml"
+  workflow_dispatch: {}   # permite rodar manualmente pela aba Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to GoDeploy
+        uses: goca-se/godeploy/action@v1
+        with:
+          api-key: ${{ secrets.GODEPLOY_DEPLOY_KEY }}
+          description: my CI deploy
+          # --- CONFIRMAR no README da action goca-se/godeploy/action@v1 ---
+          # A action precisa saber QUAL arquivo/pasta subir e em qual app.
+          # Os nomes abaixo sao um palpite com base na mecanica do GoDeploy
+          # (o HTML principal precisa ser servido como index.html na raiz).
+          # Ajuste os nomes dos inputs conforme a documentacao oficial:
+          #
+          # source: index.html          # arquivo/pasta a publicar
+          # assets: index.html          # tratar como asset estatico
+          # app-id: <APP_ID_8_CHARS>    # para ATUALIZAR um app existente
+          #                             # (omita no primeiro deploy = createApp)
+          # name: eficiencia-cx-gobeaute
